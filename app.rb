@@ -25,14 +25,24 @@ get '/' do
 end
 
 post '/tomorrow' do
-  Actions.create({
-    :num => request[:num],
+  enum = request[:enum]
+  behavior = request[:behavior]
+  date = Time.new(*[:year, :month, :day].map{|k| request[k] }).to_i
+  action = {
+    :enum => enum,
+    :date => date,
     :action => 'tomorrow',
-    :date => Time.new(*[:year, :month, :day].map{|k| request[k] }).to_i,
-    :hour => request[:hour],
-    :minute => request[:minute],
+    :behavior => behavior,
     :posted_date => Time.now
-  })
+  }
+  action[:value] = case behavior
+                   when 'onduty'
+                     [request[:hour], request[:minute]].join(':')
+                   when 'triphome', 'tripoffice'
+                     request[behavior.to_sym]
+                   end
+  Actions.filter(:enum => enum, :date => date, :action => 'tomorrow').delete
+  Actions.create(action)
   redirect '/'
 end
 
@@ -77,13 +87,13 @@ def _date_to_range (kind, date)
   (from.to_i)...(to.to_i)
 end
 
-get %r{/api/actions/(older_than|between)/(\d+(?:/\d+){0,2})} do |kind, date|
+get %r{/api/actions/(older_than|by_date)/(\d+(?:/\d+){0,2})} do |kind, date|
   actions = Actions.filter(:date => _date_to_range(kind, date))
   content_type 'text/json'
   [200, actions.map(&:to_hash).to_json]
 end
 
-delete %r{/api/actions/(older_than|between)/(\d+(?:/\d+){0,2})} do |kind, date|
+delete %r{/api/actions/(older_than|by_date)/(\d+(?:/\d+){0,2})} do |kind, date|
   actions = Actions.filter(:date => _date_to_range(kind, date))
   if actions.empty?
     204

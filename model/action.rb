@@ -12,12 +12,11 @@ class Actions < Sequel::Model
   unless table_exists?
     set_schema do
       primary_key :id
-      integer :num, :null=>false
+      integer :enum, :null=>false
       inetger :date, :null=>false
       string  :action, :null=>false
-      integer :hour
-      integer :minute
-      string  :aux
+      string  :behavior, :null=>false
+      string  :value
       timestamp :posted_date
     end
     create_table

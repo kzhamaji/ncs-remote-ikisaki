@@ -13,34 +13,53 @@ html lang="ja"
     form#tomorrow action='/tomorrow' method='post'
       fieldset
         legend 出勤設定
-        input type='string' name='num' value=261
+        div.base
+          label.enum for='enum' 従番:
+          input.enum type='string' name='enum' value=261
 
-        - require 'date'
-        - now = Time.now 
-        - today = now.to_date
-        - next_month = today >> 1
-        - lastday = (Date.new(next_month.year, next_month.month, 1) - 1).day
-        select#year name='year'
-          option value="#{now.year}" = now.year
-          option value="#{now.year+1}" = now.year+1
-        | 年
-        select#month name='month'
-          - (1..12).each do |m|
-            option value="#{m}" selected=(m == now.month ? true : false) = ("%02d" % m)
-        | 月
-        select#day name='day'
-          - (1..lastday).each do |d|
-            option value="#{d}" selected=(d == now.day ? true : false) = ("%02d" % d)
-        | 日
-        select#hour name='hour'
-          - (9..17).each do |d|
-            option = '%02d' % d
-        | :
-        select#minute name='minute'
-          option = '00'
-          option = '30'
+          - require 'date'
+          - now = Time.now 
+          - today = now.to_date
+          - next_month = today >> 1
+          - lastday = (Date.new(next_month.year, next_month.month, 1) - 1).day
+          select.year name='year'
+            option value="#{now.year}" = now.year
+            option value="#{now.year+1}" = now.year+1
+          | 年
+          select.month name='month'
+            - (1..12).each do |m|
+              option value="#{m}" selected=(m == now.month ? true : false) = ("%02d" % m)
+          | 月
+          select.day name='day'
+            - (1..lastday).each do |d|
+              option value="#{d}" selected=(d == now.day ? true : false) = ("%02d" % d)
+          | 日
 
-        input#reserve type='submit' value='予約'
+        dl.behavior
+          dt
+            input type='radio' name='behavior' value='onduty' checked='checked' 出勤:
+          dd
+            select.hour name='hour'
+              - (9..17).each do |d|
+                option = '%02d' % d
+            | :
+            select.minute name='minute'
+              option = '00'
+              option = '30'
+          dt
+            input type='radio' name='behavior' value='triphome' 出張直帰:
+          dd
+            input.where type='string' name='triphome'
+          dt
+            input type='radio' name='behavior' value='tripoffice' 出張帰社:
+          dd
+            input.where type='string' name='tripoffice'
+          dt
+            input type='radio' name='behavior' value='offduty' 休暇
+          dd
+
+        div.submit
+          input.reserve type='submit' value='予約'
 
     - if @actions
       hr
@@ -52,21 +71,21 @@ html lang="ja"
             th 年
             th 月
             th 日
-            th 時
-            th 分
+            th 行動
+            th 値
             th タイムスタンプ
             th
         tbody
         - @actions.each do |act|
           tr
             - date = Time.at(act.date)
-            td#num = act.num
+            td#enum = act.enum
             td#action = act.action
             td#year = date.year
             td#month = date.month
             td#day = date.day
-            td#hour = act.hour
-            td#minute = act.minute
+            td#behavior = act.behavior
+            td#value = act.value
             td#posted_date = act.posted_date
             td#delete
               form action="/action/#{act.id}" method='post'
