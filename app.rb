@@ -1,6 +1,7 @@
 # vim: ts=8 sts=2 sw=2 et
 
 require 'sinatra'
+require 'sinatra/cookies'
 
 require 'slim'
 require 'sass'
@@ -34,6 +35,7 @@ get '/' do
           end
   next_month = @nday >> 1
   @lastday = (Date.new(next_month.year, next_month.month, 1) - 1).day
+  @enum = cookies[:enum]
 
   slim :index
 end
@@ -57,6 +59,7 @@ post '/tomorrow' do
                    end
   Actions.filter(:enum => enum, :date => date, :action => 'tomorrow').delete
   Actions.create(action)
+  cookies[:enum] = enum
   redirect '/'
 end
 
