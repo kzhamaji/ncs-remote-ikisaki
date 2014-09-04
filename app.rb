@@ -45,7 +45,7 @@ post '/tomorrow' do
   behavior = request[:behavior]
   date = Time.new(*[:year, :month, :day].map{|k| request[k] }).to_i
   action = {
-    :enum => enum,
+    :enum => enum.to_i,
     :date => date,
     :action => 'tomorrow',
     :behavior => behavior,
