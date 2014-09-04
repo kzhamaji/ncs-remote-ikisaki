@@ -71,21 +71,21 @@ html lang="ja"
             th タイムスタンプ
             th
         tbody
-        - @actions.each do |act|
-          tr
-            - date = Time.at(act.date)
-            td#enum = act.enum
-            td#action = act.action
-            td#year = date.year
-            td#month = date.month
-            td#day = date.day
-            td#behavior = act.behavior
-            td#value = act.value
-            td#posted_date = act.posted_date
-            td#delete
-              form action="/action/#{act.id}" method='post'
-                input type='hidden' name='_method' value='DELETE'
-                input type='submit' value='削除'
+          - @actions.each do |act|
+            tr
+              - date = Time.at(act.date)
+              td#enum = act.enum
+              td#action = act.action
+              td#year = date.year
+              td#month = date.month
+              td#day = date.day
+              td#behavior = act.behavior
+              td#value = act.value
+              td#posted_date = act.posted_date
+              td#delete
+                form action="/action/#{act.id}" method='post'
+                  input type='hidden' name='_method' value='DELETE'
+                  input type='submit' value='削除'
 
       hr
       form#delete_actions action='/actions' method='post'
