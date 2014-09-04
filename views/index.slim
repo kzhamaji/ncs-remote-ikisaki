@@ -17,22 +17,17 @@ html lang="ja"
           label.enum for='enum' 従番:
           input.enum type='string' name='enum' value=261
 
-          - require 'date'
-          - now = Time.now 
-          - today = now.to_date
-          - next_month = today >> 1
-          - lastday = (Date.new(next_month.year, next_month.month, 1) - 1).day
           select.year name='year'
-            option value="#{now.year}" = now.year
-            option value="#{now.year+1}" = now.year+1
+            option = @nday.year
+            option = @nday.year+1
           | 年
           select.month name='month'
             - (1..12).each do |m|
-              option value="#{m}" selected=(m == now.month ? true : false) = ("%02d" % m)
+              option value="#{m}" selected=(m == @nday.month ? true : false) = ("%02d" % m)
           | 月
           select.day name='day'
-            - (1..lastday).each do |d|
-              option value="#{d}" selected=(d == now.day ? true : false) = ("%02d" % d)
+            - (1..@lastday).each do |d|
+              option value="#{d}" selected=(d == @nday.day ? true : false) = ("%02d" % d)
           | 日
 
         dl.behavior
