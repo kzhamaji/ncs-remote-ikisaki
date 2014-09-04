@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 gem 'sinatra'
 gem 'slim'
+gem 'sass'
 gem 'sequel'
 gem 'sqlite3'
+gem 'pg'

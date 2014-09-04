@@ -1,2 +1,5 @@
 vendor
 .bundle
+*.swp
+dbs/*.db
+.sass-cache

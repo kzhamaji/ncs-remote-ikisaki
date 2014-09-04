@@ -1,6 +1,79 @@
 / vim: ts=8 sts=2 sw=2 et ft=slim
 
 doctype html
-html
+html lang="ja"
+  head
+    meta http_equiv='Content-type' content='text/html; charset=UTF-8'
+    title リモート掲示板操作(予約)
+    link rel='stylesheet' type='text/css' href='/index.css'
+
   body
-    = @text
+    h1 リモート掲示板操作(予約)
+
+    form#tomorrow action='/tomorrow' method='post'
+      fieldset
+        legend 出勤設定
+        input type='string' name='num' value=261
+
+        - require 'date'
+        - now = Time.now 
+        - today = now.to_date
+        - next_month = today >> 1
+        - lastday = (Date.new(next_month.year, next_month.month, 1) - 1).day
+        select#year name='year'
+          option value="#{now.year}" = now.year
+          option value="#{now.year+1}" = now.year+1
+        | 年
+        select#month name='month'
+          - (1..12).each do |m|
+            option value="#{m}" selected=(m == now.month ? true : false) = ("%02d" % m)
+        | 月
+        select#day name='day'
+          - (1..lastday).each do |d|
+            option value="#{d}" selected=(d == now.day ? true : false) = ("%02d" % d)
+        | 日
+        select#hour name='hour'
+          - (9..17).each do |d|
+            option = '%02d' % d
+        | :
+        select#minute name='minute'
+          option = '00'
+          option = '30'
+
+        input#reserve type='submit' value='予約'
+
+    - if @actions
+      hr
+      table#actions
+        thead
+          tr
+            th 従番
+            th 操作
+            th 年
+            th 月
+            th 日
+            th 時
+            th 分
+            th タイムスタンプ
+            th
+        tbody
+        - @actions.each do |act|
+          tr
+            - date = Time.at(act.date)
+            td#num = act.num
+            td#action = act.action
+            td#year = date.year
+            td#month = date.month
+            td#day = date.day
+            td#hour = act.hour
+            td#minute = act.minute
+            td#posted_date = act.posted_date
+            td#delete
+              form action="/action/#{act.id}" method='post'
+                input type='hidden' name='_method' value='DELETE'
+                input type='submit' value='削除'
+
+      hr
+      form#delete_actions action='/actions' method='post'
+        input type='hidden' name='_method' value='DELETE'
+        input type='submit' value='全削除'
