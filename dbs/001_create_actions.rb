@@ -8,7 +8,7 @@ Sequel.migration do
     create_table :actions do
       primary_key :id
       integer :enum, :null=>false
-      inetger :date, :null=>false
+      integer :date, :null=>false
       string  :action, :null=>false
       string  :behavior, :null=>false
       string  :value
