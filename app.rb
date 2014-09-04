@@ -9,7 +9,8 @@ require 'sass'
 
 Slim::Engine.default_options[:pretty] = true
 
-require './model/action.rb'
+require './dbs/connect'
+require './model/action'
 
 enable :method_override
 
