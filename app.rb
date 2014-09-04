@@ -2,11 +2,10 @@
 
 require 'sinatra'
 require 'sinatra/cookies'
+require 'sinatra/json'
 
 require 'slim'
 require 'sass'
-
-require 'json'
 
 Slim::Engine.default_options[:pretty] = true
 
@@ -86,7 +85,7 @@ require 'date'
 def _date_to_range (kind, date)
   y, m, d = date.split('/').map(&:to_i)
   case kind
-  when "between"
+  when "by_date"
     if m.nil?
       from = Time.new(y, 1, 1)
       to = Time.new(y+1, 1, 1)
@@ -106,8 +105,7 @@ end
 
 get %r{/api/actions/(older_than|by_date)/(\d+(?:/\d+){0,2})} do |kind, date|
   actions = Actions.filter(:date => _date_to_range(kind, date))
-  content_type 'text/json'
-  [200, actions.map(&:to_hash).to_json]
+  json actions.map(&:to_hash)
 end
 
 delete %r{/api/actions/(older_than|by_date)/(\d+(?:/\d+){0,2})} do |kind, date|
