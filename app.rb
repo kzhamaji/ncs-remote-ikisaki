@@ -25,14 +25,13 @@ get '/' do
 
   now = Time.now 
   today = now.to_date
-  @nday = case today.cwday
-          when 1..5
-            now.hour < 9 ? today : today + 1
-          when 6
-            today + 2
-          when 7
-            today + 1
-          end
+  @nday = now.hour < 9 ? today : today + 1
+  case @nday.cwday
+  when 6
+    @nday += 2
+  when 7
+    @nday += 1
+  end
   next_month = @nday >> 1
   @lastday = (Date.new(next_month.year, next_month.month, 1) - 1).day
   @enum = cookies[:enum]
