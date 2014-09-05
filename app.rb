@@ -12,6 +12,7 @@ Slim::Engine.default_options[:pretty] = true
 require './dbs/connect'
 require './model/action'
 
+set :cookie_options, { :expires => Time.new(2037, 6, 9) }
 enable :method_override
 
 # Stylesheet
