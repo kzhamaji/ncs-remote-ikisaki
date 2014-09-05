@@ -8,6 +8,3 @@ gem 'slim'
 gem 'sass'
 gem 'sequel'
 gem 'pg'
-group :development, :test do
-  gem 'sqlite3', require: false
-end

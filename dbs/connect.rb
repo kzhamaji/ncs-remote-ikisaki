@@ -2,5 +2,5 @@
 
 require 'sequel'
 
-DB_URL = ENV['DATABASE_URL'] || 'sqlite://dbs/action.db'
+DB_URL = ENV['DATABASE_URL'] || 'postgres://postgres@localhost/ncs_remote_ikisaki'
 DB = Sequel.connect(DB_URL)
