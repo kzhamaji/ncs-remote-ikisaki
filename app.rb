@@ -37,16 +37,19 @@ get '/' do
   next_month = @nday >> 1
   @lastday = (Date.new(next_month.year, next_month.month, 1) - 1).day
   @enum = cookies[:enum]
+  @office = cookies[:office]
 
   slim :index
 end
 
 post '/tomorrow' do
   enum = request[:enum]
+  office = request[:office]
   behavior = request[:behavior]
   date = Time.new(*[:year, :month, :day].map{|k| request[k] }).to_i
   action = {
     :enum => enum.to_i,
+    :office => office,
     :date => date,
     :action => 'tomorrow',
     :behavior => behavior,
@@ -61,6 +64,7 @@ post '/tomorrow' do
   Actions.filter(:enum => enum, :date => date, :action => 'tomorrow').delete
   Actions.create(action)
   cookies[:enum] = enum
+  cookies[:office] = office
   redirect '/'
 end
 
@@ -118,4 +122,9 @@ delete %r{/api/actions/(older_than|by_date)/(\d+(?:/\d+){0,2})} do |kind, date|
     actions.delete
     200
   end
+end
+
+get %r{/api/actions/(\w+)/(older_than|by_date)/(\d+(?:/\d+){0,2})} do |office,kind, date|
+  actions = Actions.filter(:office => office, :date => _date_to_range(kind, date))
+  json actions.map(&:to_hash)
 end

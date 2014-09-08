@@ -17,6 +17,10 @@ html lang="ja"
           label.enum for='enum' 従番:
           input.enum type='string' name='enum' value=@enum
 
+          select.office name='office'
+            - [['Shinyokohama', '新横浜'], ['Osaka', '大阪'], ['Ebisu', '恵比寿']].each do |n,l|
+              option value="#{n}" selected=(n == @office ? true : false) = l
+
           select.year name='year'
             option = @nday.year
             option = @nday.year+1
@@ -62,6 +66,7 @@ html lang="ja"
         thead
           tr
             th 従番
+            th 事務所
             th 操作
             th 年
             th 月
@@ -75,6 +80,7 @@ html lang="ja"
             tr
               - date = Time.at(act.date)
               td#enum = act.enum
+              td#office = act.office
               td#action = act.action
               td#year = date.year
               td#month = date.month
