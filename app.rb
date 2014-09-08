@@ -3,6 +3,7 @@
 require 'sinatra'
 require 'sinatra/cookies'
 require 'sinatra/json'
+require 'sinatra/reloader' if development?
 
 require 'slim'
 require 'sass'
