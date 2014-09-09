@@ -16,6 +16,10 @@ require './model/action'
 set :cookie_options, { :expires => Time.new(2037, 6, 9) }
 enable :method_override
 
+trap :TERM do
+  exit 1
+end
+
 # Stylesheet
 get '/*.css' do |base|
   content_type 'text/css', :charset=>'utf-8'
