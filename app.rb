@@ -17,7 +17,7 @@ set :cookie_options, { :expires => Time.new(2037, 6, 9) }
 enable :method_override
 
 trap :TERM do
-  exit 1
+  Process.kill :INT, $$
 end
 
 # Stylesheet
