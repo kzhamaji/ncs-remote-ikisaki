@@ -62,7 +62,7 @@ post '/tomorrow' do
   action[:value] = case behavior
                    when 'onduty'
                      [request[:hour], request[:minute]].join(':')
-                   when 'triphome', 'tripoffice'
+                   when 'triphome', 'tripoffice', 'offam', 'offpm'
                      request[behavior.to_sym]
                    end
   Actions.filter(:enum => enum, :date => date, :action => 'tomorrow').delete
